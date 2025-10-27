@@ -1,0 +1,89 @@
+/* Custom styles beyond Bootstrap */
+
+/* Main layout */
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
+footer {
+    margin-top: auto;
+}
+
+/* Home page hero section */
+.hero {
+    padding: 5rem 0;
+    background-color: var(--bs-dark);
+    margin-bottom: 2rem;
+}
+
+/* Car card styling */
+.car-card {
+    height: 100%;
+    transition: transform 0.3s ease;
+}
+
+.car-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.car-card .card-img-top {
+    height: 200px;
+    object-fit: cover;
+}
+
+/* Car details page */
+.car-detail-img {
+    max-height: 400px;
+    object-fit: contain;
+}
+
+.feature-icon {
+    font-size: 1.5rem;
+    margin-right: 0.5rem;
+}
+
+/* Dashboard panels */
+.dashboard-stat {
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    text-align: center;
+}
+
+.dashboard-stat h2 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+/* Rental date picker custom styles */
+.rental-form .form-group {
+    margin-bottom: 1.5rem;
+}
+
+/* Error pages */
+.error-page {
+    text-align: center;
+    padding: 5rem 0;
+}
+
+.error-page h1 {
+    font-size: 8rem;
+    margin-bottom: 1rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .car-card .card-img-top {
+        height: 150px;
+    }
+    
+    .dashboard-stat h2 {
+        font-size: 2rem;
+    }
+}

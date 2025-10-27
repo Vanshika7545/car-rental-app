@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+
+{% block title %} - Home{% endblock %}
+
+{% block content %}
+<div class="hero text-center text-white">
+    <div class="container">
+        <h1 class="display-4">Find Your Perfect Ride</h1>
+        <p class="lead">Explore our wide collection of rental cars for any occasion</p>
+        {% if not current_user.is_authenticated %}
+            <div class="mt-4">
+                <a href="{{ url_for('register') }}" class="btn btn-primary me-2">Register</a>
+                <a href="{{ url_for('login') }}" class="btn btn-outline-light">Login</a>
+            </div>
+        {% else %}
+            <div class="mt-4">
+                <a href="{{ url_for('user_dashboard' if not current_user.is_admin else 'admin_dashboard') }}" class="btn btn-primary">Go to Dashboard</a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="container">
+    <!-- Featured Cars Section -->
+    <section class="mb-5">
+        <h2 class="text-center mb-4">Featured Cars</h2>
+        
+        {% if featured_models %}
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                {% for model in featured_models %}
+                    <div class="col">
+                        <div class="card car-card h-100">
+                            {% if model.image_url %}
+                                <img src="{{ model.image_url }}" class="card-img-top" alt="{{ model.car.brand }} {{ model.name }}">
+                            {% else %}
+                                <div class="card-img-top d-flex align-items-center justify-content-center bg-secondary">
+                                    <i class="fas fa-car fa-3x text-light"></i>
+                                </div>
+                            {% endif %}
+                            <div class="card-body">
+                                <h5 class="card-title">{{ model.car.brand }} {{ model.name }}</h5>
+                                <p class="card-text">
+                                    <i class="fas fa-gas-pump"></i> {{ model.fuel_type }}<br>
+                                    <i class="fas fa-cog"></i> {{ model.transmission }}<br>
+                                    <i class="fas fa-dollar-sign"></i> ${{ model.price_per_day }} per day
+                                </p>
+                            </div>
+                            <div class="card-footer">
+                                <a href="{{ url_for('car_details', model_id=model.id) }}" class="btn btn-primary w-100">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert alert-info">
+                No cars available at the moment. Check back later!
+            </div>
+        {% endif %}
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="mb-5">
+        <h2 class="text-center mb-4">How It Works</h2>
+        <div class="row text-center">
+            <div class="col-md-4 mb-4">
+                <div class="p-3">
+                    <div class="bg-secondary rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                        <i class="fas fa-search fa-2x text-white"></i>
+                    </div>
+                    <h4>Find a Car</h4>
+                    <p>Browse our extensive collection of cars and find the perfect one for your needs.</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="p-3">
+                    <div class="bg-secondary rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                        <i class="fas fa-calendar-alt fa-2x text-white"></i>
+                    </div>
+                    <h4>Book Your Dates</h4>
+                    <p>Select your pickup and return dates to secure your rental period.</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="p-3">
+                    <div class="bg-secondary rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                        <i class="fas fa-car fa-2x text-white"></i>
+                    </div>
+                    <h4>Enjoy Your Ride</h4>
+                    <p>Pick up your car and enjoy your journey with our well-maintained vehicles.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="mb-5">
+        <h2 class="text-center mb-4">What Our Customers Say</h2>
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="mb-2">
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                        </div>
+                        <p class="card-text">"Amazing service! The car was in perfect condition and the rental process was smooth and easy."</p>
+                        <p class="card-text"><small class="text-muted">- John D.</small></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="mb-2">
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star-half-alt text-warning"></i>
+                        </div>
+                        <p class="card-text">"Great selection of cars at competitive prices. Will definitely use again for my next trip!"</p>
+                        <p class="card-text"><small class="text-muted">- Sarah M.</small></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="mb-2">
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                        </div>
+                        <p class="card-text">"The best car rental experience I've ever had. Friendly staff and top-notch vehicles."</p>
+                        <p class="card-text"><small class="text-muted">- Michael R.</small></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

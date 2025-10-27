@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+
+{% block title %} - Edit Car Model{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-warning text-dark">
+                    <h4 class="mb-0"><i class="fas fa-edit"></i> Edit Car Model</h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('edit_car_model', model_id=car_model.id) }}">
+                        {{ form.hidden_tag() }}
+                        
+                        <div class="mb-3">
+                            <label for="car_id" class="form-label">{{ form.car_id.label }}</label>
+                            {{ form.car_id(class="form-control") }}
+                            {% if form.car_id.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.car_id.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="name" class="form-label">{{ form.name.label }}</label>
+                            {{ form.name(class="form-control") }}
+                            {% if form.name.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.name.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="price_per_day" class="form-label">{{ form.price_per_day.label }} ($)</label>
+                            {{ form.price_per_day(class="form-control") }}
+                            {% if form.price_per_day.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.price_per_day.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="mileage" class="form-label">{{ form.mileage.label }}</label>
+                                {{ form.mileage(class="form-control") }}
+                                {% if form.mileage.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {% for error in form.mileage.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="seats" class="form-label">{{ form.seats.label }}</label>
+                                {{ form.seats(class="form-control") }}
+                                {% if form.seats.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {% for error in form.seats.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="fuel_type" class="form-label">{{ form.fuel_type.label }}</label>
+                                {{ form.fuel_type(class="form-control") }}
+                                {% if form.fuel_type.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {% for error in form.fuel_type.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="transmission" class="form-label">{{ form.transmission.label }}</label>
+                                {{ form.transmission(class="form-control") }}
+                                {% if form.transmission.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {% for error in form.transmission.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="image_url" class="form-label">{{ form.image_url.label }}</label>
+                            {{ form.image_url(class="form-control") }}
+                            <div class="form-text">Enter a valid URL to an image. For best results, use a 16:9 ratio image.</div>
+                            {% if form.image_url.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.image_url.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3 form-check">
+                            {{ form.air_conditioning(class="form-check-input") }}
+                            <label class="form-check-label" for="air_conditioning">{{ form.air_conditioning.label }}</label>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left"></i> Cancel
+                            </a>
+                            {{ form.submit(class="btn btn-warning", value="Update Car Model") }}
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Car Model Preview -->
+            <div class="card mt-4">
+                <div class="card-header bg-dark">
+                    <h5 class="mb-0">Car Model Preview</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-5">
+                            {% if car_model.image_url %}
+                                <img src="{{ car_model.image_url }}" alt="{{ car_model.name }}" class="img-fluid rounded">
+                            {% else %}
+                                <div class="bg-secondary rounded d-flex align-items-center justify-content-center" style="height: 200px;">
+                                    <i class="fas fa-car fa-3x text-light"></i>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-7">
+                            <h4>{{ car_model.car.brand }} {{ car_model.name }}</h4>
+                            <p><strong>Price:</strong> ${{ car_model.price_per_day }} per day</p>
+                            <p><strong>Fuel Type:</strong> {{ car_model.fuel_type }}</p>
+                            <p><strong>Transmission:</strong> {{ car_model.transmission }}</p>
+                            {% if car_model.seats %}
+                                <p><strong>Seats:</strong> {{ car_model.seats }}</p>
+                            {% endif %}
+                            {% if car_model.mileage %}
+                                <p><strong>Mileage:</strong> {{ car_model.mileage }}</p>
+                            {% endif %}
+                            <p><strong>Air Conditioning:</strong> {{ 'Yes' if car_model.air_conditioning else 'No' }}</p>
+                            <p><strong>Status:</strong> 
+                                {% if car_model.is_available %}
+                                    <span class="badge bg-success">Available</span>
+                                {% else %}
+                                    <span class="badge bg-danger">Rented</span>
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

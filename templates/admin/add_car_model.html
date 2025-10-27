@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block title %} - Add Car Model{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="fas fa-car-side"></i> Add New Car Model</h4>
+                </div>
+                <div class="card-body">
+                    {% if form.car_id.choices %}
+                        <form method="POST" action="{{ url_for('add_car_model') }}">
+                            {{ form.hidden_tag() }}
+                            
+                            <div class="mb-3">
+                                <label for="car_id" class="form-label">{{ form.car_id.label }}</label>
+                                {{ form.car_id(class="form-control") }}
+                                {% if form.car_id.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {% for error in form.car_id.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="name" class="form-label">{{ form.name.label }}</label>
+                                {{ form.name(class="form-control", placeholder="Enter model name (e.g., Camry, Civic, X5)") }}
+                                {% if form.name.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {% for error in form.name.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="price_per_day" class="form-label">{{ form.price_per_day.label }} ($)</label>
+                                {{ form.price_per_day(class="form-control", placeholder="Enter daily rental price") }}
+                                {% if form.price_per_day.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {% for error in form.price_per_day.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="mileage" class="form-label">{{ form.mileage.label }}</label>
+                                    {{ form.mileage(class="form-control", placeholder="Enter mileage in miles") }}
+                                    {% if form.mileage.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {% for error in form.mileage.errors %}
+                                                {{ error }}
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="seats" class="form-label">{{ form.seats.label }}</label>
+                                    {{ form.seats(class="form-control", placeholder="Enter number of seats") }}
+                                    {% if form.seats.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {% for error in form.seats.errors %}
+                                                {{ error }}
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="fuel_type" class="form-label">{{ form.fuel_type.label }}</label>
+                                    {{ form.fuel_type(class="form-control") }}
+                                    {% if form.fuel_type.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {% for error in form.fuel_type.errors %}
+                                                {{ error }}
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="transmission" class="form-label">{{ form.transmission.label }}</label>
+                                    {{ form.transmission(class="form-control") }}
+                                    {% if form.transmission.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {% for error in form.transmission.errors %}
+                                                {{ error }}
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="image_url" class="form-label">{{ form.image_url.label }}</label>
+                                {{ form.image_url(class="form-control", placeholder="Enter URL for car image") }}
+                                <div class="form-text">Enter a valid URL to an image. For best results, use a 16:9 ratio image.</div>
+                                {% if form.image_url.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {% for error in form.image_url.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="mb-3 form-check">
+                                {{ form.air_conditioning(class="form-check-input") }}
+                                <label class="form-check-label" for="air_conditioning">{{ form.air_conditioning.label }}</label>
+                            </div>
+                            
+                            <div class="d-flex justify-content-between">
+                                <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">
+                                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                                </a>
+                                {{ form.submit(class="btn btn-primary") }}
+                            </div>
+                        </form>
+                    {% else %}
+                        <div class="alert alert-warning">
+                            <h5>No cars available!</h5>
+                            <p>You need to add at least one car before adding a car model.</p>
+                            <a href="{{ url_for('add_car') }}" class="btn btn-primary mt-2">Add a Car First</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

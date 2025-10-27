@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block title %} - My Rentals{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mb-4">My Rentals</h1>
+    
+    {% if rentals %}
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header bg-dark">
+                        <h4 class="mb-0">Rental History</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Rental ID</th>
+                                        <th>Car</th>
+                                        <th>From</th>
+                                        <th>To</th>
+                                        <th>Total Price</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for rental in rentals %}
+                                        <tr>
+                                            <td>#{{ rental.id }}</td>
+                                            <td>
+                                                <a href="{{ url_for('car_details', model_id=rental.car_model.id) }}">
+                                                    {{ rental.car_model.car.brand }} {{ rental.car_model.name }}
+                                                </a>
+                                            </td>
+                                            <td>{{ rental.start_date.strftime('%Y-%m-%d') }}</td>
+                                            <td>{{ rental.end_date.strftime('%Y-%m-%d') }}</td>
+                                            <td>${{ rental.total_price }}</td>
+                                            <td>
+                                                {% if rental.status == 'active' %}
+                                                    <span class="badge bg-success">{{ rental.status }}</span>
+                                                {% elif rental.status == 'completed' %}
+                                                    <span class="badge bg-info">{{ rental.status }}</span>
+                                                {% elif rental.status == 'cancelled' %}
+                                                    <span class="badge bg-danger">{{ rental.status }}</span>
+                                                {% else %}
+                                                    <span class="badge bg-secondary">{{ rental.status }}</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if rental.status in ['active', 'pending'] %}
+                                                    <form method="POST" action="{{ url_for('cancel_rental', rental_id=rental.id) }}" class="d-inline">
+                                                        <button type="submit" class="btn btn-sm btn-danger cancel-rental-btn">
+                                                            <i class="fas fa-times"></i> Cancel
+                                                        </button>
+                                                    </form>
+                                                {% else %}
+                                                    -
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Rental Stats Card -->
+        <div class="row mt-4">
+            <div class="col-md-4 mb-3">
+                <div class="card bg-dark text-white">
+                    <div class="card-body text-center">
+                        <h5>Active Rentals</h5>
+                        <h2>{{ rentals|selectattr('status', 'equalto', 'active')|list|length }}</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card bg-dark text-white">
+                    <div class="card-body text-center">
+                        <h5>Completed Rentals</h5>
+                        <h2>{{ rentals|selectattr('status', 'equalto', 'completed')|list|length }}</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card bg-dark text-white">
+                    <div class="card-body text-center">
+                        <h5>Total Spent</h5>
+                        <h2>${{ rentals|sum(attribute='total_price')|round(2) }}</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            <h4 class="alert-heading">No rentals yet!</h4>
+            <p>You haven't rented any cars yet. Browse our collection and find your perfect ride today.</p>
+            <hr>
+            <div class="mb-0">
+                <a href="{{ url_for('user_dashboard') }}" class="btn btn-primary">Browse Cars</a>
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %} - User Dashboard{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <h1>Available Cars</h1>
+        </div>
+        <div class="col-md-6">
+            <div class="d-flex justify-content-end">
+                <!-- Search Form -->
+                <form method="POST" action="{{ url_for('search') }}" class="d-flex">
+                    {{ form.hidden_tag() }}
+                    <div class="input-group">
+                        {{ form.query(class="form-control", placeholder="Search cars...", value=search_query if search_query else '') }}
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filter options -->
+    <div class="row mb-4">
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 mb-2">
+                            <label for="brandFilter" class="form-label">Filter by Brand</label>
+                            <select id="brandFilter" class="form-select">
+                                <option value="all">All Brands</option>
+                                {% for brand in brands %}
+                                    <option value="{{ brand }}">{{ brand }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Car Listings -->
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        {% if car_models %}
+            {% for model in car_models %}
+                <div class="col car-column">
+                    <div class="card h-100 car-card" data-brand="{{ model.car.brand }}">
+                        {% if model.image_url %}
+                            <img src="{{ model.image_url }}" class="card-img-top" alt="{{ model.car.brand }} {{ model.name }}">
+                        {% else %}
+                            <div class="card-img-top d-flex align-items-center justify-content-center bg-secondary" style="height: 200px;">
+                                <i class="fas fa-car fa-3x text-light"></i>
+                            </div>
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ model.car.brand }} {{ model.name }}</h5>
+                            <div class="mb-2">
+                                <span class="badge bg-info me-1">{{ model.car.year }}</span>
+                                <span class="badge bg-secondary me-1">{{ model.transmission }}</span>
+                                <span class="badge bg-secondary">{{ model.fuel_type }}</span>
+                            </div>
+                            <p class="card-text">
+                                {% if model.seats %}
+                                    <i class="fas fa-users me-1" data-bs-toggle="tooltip" title="Seats"></i> {{ model.seats }} seats<br>
+                                {% endif %}
+                                {% if model.mileage %}
+                                    <i class="fas fa-tachometer-alt me-1" data-bs-toggle="tooltip" title="Mileage"></i> {{ model.mileage }} miles<br>
+                                {% endif %}
+                                {% if model.air_conditioning %}
+                                    <i class="fas fa-snowflake me-1" data-bs-toggle="tooltip" title="Air Conditioning"></i> A/C<br>
+                                {% endif %}
+                            </p>
+                            <h5 class="card-text text-primary">${{ model.price_per_day }} / day</h5>
+                        </div>
+                        <div class="card-footer">
+                            <a href="{{ url_for('car_details', model_id=model.id) }}" class="btn btn-primary w-100">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12">
+                <div class="alert alert-info">
+                    {% if search_query %}
+                        No cars found matching "{{ search_query }}". Please try a different search.
+                    {% else %}
+                        No cars available at the moment. Please check back later!
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

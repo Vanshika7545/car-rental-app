@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block title %} - {{ car_model.car.brand }} {{ car_model.name }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <!-- Car Details -->
+        <div class="col-lg-8">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="mb-4">
+                        {% if car_model.image_url %}
+                            <img src="{{ car_model.image_url }}" class="img-fluid rounded car-detail-img" alt="{{ car_model.car.brand }} {{ car_model.name }}">
+                        {% else %}
+                            <div class="bg-secondary rounded d-flex align-items-center justify-content-center" style="height: 300px;">
+                                <i class="fas fa-car fa-5x text-light"></i>
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <h1 class="mb-3">{{ car_model.car.brand }} {{ car_model.name }}</h1>
+                    
+                    <div class="d-flex mb-3">
+                        <span class="badge bg-info me-2 p-2">{{ car_model.car.year }}</span>
+                        <span class="badge bg-secondary me-2 p-2">{{ car_model.transmission }}</span>
+                        <span class="badge bg-secondary p-2">{{ car_model.fuel_type }}</span>
+                    </div>
+                    
+                    <hr>
+                    
+                    <h4>Features and Specifications</h4>
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <ul class="list-group list-group-flush">
+                                {% if car_model.seats %}
+                                    <li class="list-group-item">
+                                        <i class="fas fa-users feature-icon"></i> {{ car_model.seats }} Seats
+                                    </li>
+                                {% endif %}
+                                {% if car_model.mileage %}
+                                    <li class="list-group-item">
+                                        <i class="fas fa-tachometer-alt feature-icon"></i> {{ car_model.mileage }} miles
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">
+                                    <i class="fas fa-snowflake feature-icon"></i> 
+                                    Air Conditioning: {{ 'Yes' if car_model.air_conditioning else 'No' }}
+                                </li>
+                                <li class="list-group-item">
+                                    <i class="fas fa-gas-pump feature-icon"></i> {{ car_model.fuel_type }}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    {% if car_model.car.description %}
+                        <div class="mt-4">
+                            <h4>Description</h4>
+                            <p>{{ car_model.car.description }}</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Rental Form -->
+        <div class="col-lg-4">
+            <div class="card sticky-top" style="top: 20px;">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Rent This Car</h4>
+                </div>
+                <div class="card-body">
+                    <div class="price-display mb-4 text-center">
+                        <h5>Price Per Day</h5>
+                        <h2 class="text-primary" id="price_per_day" data-price="{{ car_model.price_per_day }}">${{ car_model.price_per_day }}</h2>
+                    </div>
+                    
+                    {% if car_model.is_available %}
+                        <form method="POST" action="{{ url_for('car_details', model_id=car_model.id) }}" class="rental-form">
+                            {{ form.hidden_tag() }}
+                            {{ form.car_model_id }}
+                            
+                            <div class="mb-3">
+                                <label for="start_date" class="form-label">Start Date</label>
+                                {{ form.start_date(class="form-control", type="date", min=today) }}
+                                {% if form.start_date.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {% for error in form.start_date.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="end_date" class="form-label">End Date</label>
+                                {{ form.end_date(class="form-control", type="date", min=today) }}
+                                {% if form.end_date.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {% for error in form.end_date.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="mb-4 p-3 bg-light rounded text-center">
+                                <h5>Total Price</h5>
+                                <h3 class="text-primary" id="total_price">$0.00</h3>
+                                <small class="text-muted">Select dates to calculate</small>
+                            </div>
+                            
+                            <div class="d-grid">
+                                {{ form.submit(class="btn btn-lg btn-primary") }}
+                            </div>
+                        </form>
+                    {% else %}
+                        <div class="alert alert-danger">
+                            <i class="fas fa-exclamation-circle"></i> This car is currently unavailable for rent.
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="card-footer">
+                    <p class="mb-0 text-center">
+                        <i class="fas fa-shield-alt"></i> Secure Booking
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="mt-5 mb-3">
+        <a href="{{ url_for('user_dashboard') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to All Cars
+        </a>
+    </div>
+</div>
+{% endblock %}
