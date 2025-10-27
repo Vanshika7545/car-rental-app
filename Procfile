@@ -1,1 +1,1 @@
-web: gunicorn main:app
+web: PYTHON_VERSION=3.11.9 gunicorn app:app
